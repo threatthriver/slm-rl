@@ -4,7 +4,7 @@ A modular, production-grade Reinforcement Learning (RL) framework engineered spe
 
 ---
 
-## 🚀 Novel Frontiers in SLM Reinforcement Learning
+## Novel Frontiers in SLM Reinforcement Learning
 
 This codebase features 5 breakthrough algorithmic paradigms tailored specifically for Small Language Models:
 
@@ -38,7 +38,7 @@ This codebase features 5 breakthrough algorithmic paradigms tailored specificall
 
 ---
 
-## 🏛️ Complete Architectural Matrix
+## Complete Architectural Matrix
 
 | Algorithm | Type | Memory Footprint | Advantage / Loss Type | Key Use Case |
 | :--- | :--- | :--- | :--- | :--- |
@@ -50,7 +50,7 @@ This codebase features 5 breakthrough algorithmic paradigms tailored specificall
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```
 .
@@ -105,19 +105,19 @@ This codebase features 5 breakthrough algorithmic paradigms tailored specificall
 
 ---
 
-## ⚡ Quickstart
+## Quickstart
 
 ### 1. Run the Cognition Studio Web Application (All 6 Key Areas)
 ```bash
 uv run uvicorn app:app --host 127.0.0.1 --port 8000 --reload
 ```
 Open `http://127.0.0.1:8000` in your browser to access:
-- **🧠 Deliberative Reasoning Studio**: Test-time deliberation trace & step breakdown.
-- **🎯 CSAO Pivot Inspector**: Surgical counterfactual step-credit attribution.
-- **⚔️ Prover-Skeptic Duel Arena**: Autonomous zero-teacher self-play game matrix.
-- **🏔️ Curriculum Mastery Pyramid**: Dynamic 5-tier reasoning progression.
-- **📊 Telemetry & Reward Studio**: Live Apple Silicon MPS training curves & reward simulator.
-- **⚖️ OpenAI vs SLM-RL Comparator**: Direct hardware, algorithm, and parameter memory benchmark.
+- **Deliberative Reasoning Studio**: Test-time deliberation trace & step breakdown.
+- **CSAO Pivot Inspector**: Surgical counterfactual step-credit attribution.
+- **Prover-Skeptic Duel Arena**: Autonomous zero-teacher self-play game matrix.
+- **Curriculum Mastery Pyramid**: Dynamic 5-tier reasoning progression.
+- **Telemetry & Reward Studio**: Live Apple Silicon MPS training curves & reward simulator.
+- **OpenAI vs SLM-RL Comparator**: Direct hardware, algorithm, and parameter memory benchmark.
 
 ### 2. Run the Full Test Suite (60 Tests, 100% Green)
 ```bash
@@ -176,7 +176,7 @@ uv run python chat.py
 
 ---
 
-## 🧪 Verification & Mathematical Safety
+## Verification & Mathematical Safety
 
 - **Zero-KL Invariant**: Low-variance Schulman formulation strictly evaluates to $0.0$ when $\pi = \pi_{\text{ref}}$.
 - **Gradient Clamping**: Clamps exponential log-ratios to $[-10.0, 10.0]$, eliminating explosive gradient spikes under large distribution shifts.

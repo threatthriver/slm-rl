@@ -39,7 +39,7 @@ def main():
     device = args.device or get_default_device()
 
     print(f"\n{BOLD}{CYAN}================================================================={RESET}")
-    print(f"{BOLD}🧠 SLM Interactive Deliberative Reasoning Shell{RESET}")
+    print(f"{BOLD}[SLM Interactive Deliberative Reasoning Shell]{RESET}")
     print(f"Model:       {args.model}")
     print(f"Device:      {device}")
     print(f"{DIM}Type your arithmetic or multi-step word problem below.{RESET}")
@@ -56,7 +56,7 @@ def main():
 
     print(f"\n{YELLOW}Loading model weights into memory...{RESET}")
     policy = SLMPolicy(model_config)
-    print(f"{GREEN}✓ Model ready for real-time deliberative inference!{RESET}\n")
+    print(f"{GREEN}[Ready] Model loaded for real-time deliberative inference.{RESET}\n")
 
     while True:
         try:
@@ -87,10 +87,10 @@ def main():
         answer_match = re.search(r"<answer>(.*?)</answer>", completion, re.DOTALL)
 
         if think_match:
-            print(f"{CYAN}🤔 Thinking Process (<think>):{RESET}")
+            print(f"{CYAN}Thinking Process (<think>):{RESET}")
             print(f"{DIM}{think_match.group(1).strip()}{RESET}\n")
         if answer_match:
-            print(f"{GREEN}🎯 Final Answer (<answer>): {BOLD}{answer_match.group(1).strip()}{RESET}")
+            print(f"{GREEN}Final Answer (<answer>): {BOLD}{answer_match.group(1).strip()}{RESET}")
         else:
             print(f"{YELLOW}Output:{RESET}\n{completion}")
         print("-" * 55)

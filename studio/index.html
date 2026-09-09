@@ -25,27 +25,27 @@
 
             <nav class="nav-menu">
                 <button class="nav-item active" data-tab="playground">
-                    <span class="icon">🧠</span>
+                    <span class="icon">01</span>
                     <span>Reasoning Studio</span>
                 </button>
                 <button class="nav-item" data-tab="csao">
-                    <span class="icon">🎯</span>
+                    <span class="icon">02</span>
                     <span>CSAO Pivot Inspector</span>
                 </button>
                 <button class="nav-item" data-tab="duel">
-                    <span class="icon">⚔️</span>
+                    <span class="icon">03</span>
                     <span>Prover-Skeptic Duel</span>
                 </button>
                 <button class="nav-item" data-tab="curriculum">
-                    <span class="icon">🏔️</span>
+                    <span class="icon">04</span>
                     <span>Curriculum Pyramid</span>
                 </button>
                 <button class="nav-item" data-tab="telemetry">
-                    <span class="icon">📊</span>
+                    <span class="icon">05</span>
                     <span>Telemetry & Rewards</span>
                 </button>
                 <button class="nav-item" data-tab="compare">
-                    <span class="icon">⚖️</span>
+                    <span class="icon">06</span>
                     <span>OpenAI vs SLM-RL</span>
                 </button>
             </nav>
@@ -114,7 +114,7 @@
                                 <input type="range" id="tokens-slider" min="32" max="256" step="16" value="128">
                             </div>
                             <button class="btn primary-btn" id="btn-generate">
-                                <span class="btn-icon">⚡</span> Run Deliberation
+                                Run Deliberation
                             </button>
                         </div>
                     </div>
@@ -128,7 +128,7 @@
 
                         <div class="reasoning-viewer" id="reasoning-viewer">
                             <div class="empty-state">
-                                <div class="empty-icon">💭</div>
+                                <div class="empty-icon">[Deliberation Standby]</div>
                                 <p>Select a benchmark question above or type your own problem, then click <b>Run Deliberation</b>.</p>
                                 <span class="empty-hint">The model will think step-by-step inside <code>&lt;think&gt;</code> before outputting the verified answer in <code>&lt;answer&gt;</code>.</span>
                             </div>
@@ -194,7 +194,7 @@ Step 4: Therefore Natalia has 82 clips.
                         <div class="duel-arena-layout">
                             <div class="agent-card prover-card">
                                 <div class="agent-header">
-                                    <span class="agent-avatar">🛡️</span>
+                                    <span class="agent-avatar">[Prover]</span>
                                     <div>
                                         <h4>Prover SLM</h4>
                                         <span class="agent-role">Proof Constructor</span>
@@ -208,13 +208,13 @@ Step 4: Therefore Natalia has 82 clips.
 
                             <div class="duel-vs-divider">
                                 <div class="vs-circle">VS</div>
-                                <button class="btn accent-btn" id="btn-trigger-duel">⚔️ Start Duel Round</button>
+                                <button class="btn accent-btn" id="btn-trigger-duel">Start Duel Round</button>
                                 <div class="outcome-tag" id="duel-outcome-tag">Status: Idle</div>
                             </div>
 
                             <div class="agent-card skeptic-card">
                                 <div class="agent-header">
-                                    <span class="agent-avatar">🔍</span>
+                                    <span class="agent-avatar">[Skeptic]</span>
                                     <div>
                                         <h4>Skeptic SLM</h4>
                                         <span class="agent-role">Adversarial Verifier</span>
@@ -257,7 +257,7 @@ Step 4: Therefore Natalia has 82 clips.
                                     <h4>Mixed Operations & Division Reasoning</h4>
                                     <span>Rate: 85.0% • Promoted!</span>
                                 </div>
-                                <span class="tier-status mastered">Mastered ✓</span>
+                                <span class="tier-status mastered">Mastered</span>
                             </div>
                             <div class="tier-level tier-3" data-tier="3">
                                 <div class="tier-number">Tier 3</div>
@@ -265,7 +265,7 @@ Step 4: Therefore Natalia has 82 clips.
                                     <h4>Multiplicative Chains with Parentheses</h4>
                                     <span>Rate: 92.0% • Promoted!</span>
                                 </div>
-                                <span class="tier-status mastered">Mastered ✓</span>
+                                <span class="tier-status mastered">Mastered</span>
                             </div>
                             <div class="tier-level tier-2" data-tier="2">
                                 <div class="tier-number">Tier 2</div>
@@ -273,7 +273,7 @@ Step 4: Therefore Natalia has 82 clips.
                                     <h4>Two-Step Sequential Arithmetic</h4>
                                     <span>Rate: 98.0% • Promoted!</span>
                                 </div>
-                                <span class="tier-status mastered">Mastered ✓</span>
+                                <span class="tier-status mastered">Mastered</span>
                             </div>
                             <div class="tier-level tier-1" data-tier="1">
                                 <div class="tier-number">Tier 1</div>
@@ -281,7 +281,7 @@ Step 4: Therefore Natalia has 82 clips.
                                     <h4>Single-Step Addition & Subtraction</h4>
                                     <span>Rate: 100.0% • Baseline</span>
                                 </div>
-                                <span class="tier-status mastered">Mastered ✓</span>
+                                <span class="tier-status mastered">Mastered</span>
                             </div>
                         </div>
                     </div>

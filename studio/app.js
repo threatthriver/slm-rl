@@ -179,7 +179,7 @@ function initReasoningPlayground() {
                 if (latencyTag) latencyTag.textContent = "Error";
             } finally {
                 btnGenerate.disabled = false;
-                btnGenerate.innerHTML = `<span class="btn-icon">⚡</span> Run Deliberation`;
+                btnGenerate.innerHTML = `Run Deliberation`;
             }
         });
     }
@@ -216,7 +216,7 @@ function renderDeliberationOutput(data, container, latencyTag) {
             <!-- Deliberation Think Box -->
             <div class="trace-box think-box">
                 <div class="trace-box-title">
-                    <span>🤔 Deliberation Process (&lt;think&gt;)</span>
+                    <span>Deliberation Process (&lt;think&gt;)</span>
                 </div>
                 <div class="trace-content">${escapeHtml(data.think || "(Direct response)")}</div>
             </div>
@@ -224,7 +224,7 @@ function renderDeliberationOutput(data, container, latencyTag) {
             <!-- Verified Answer Box -->
             <div class="trace-box answer-box">
                 <div class="trace-box-title">
-                    <span>🎯 Verified Solution (&lt;answer&gt;)</span>
+                    <span>Verified Solution (&lt;answer&gt;)</span>
                 </div>
                 <div class="answer-content-large">${escapeHtml(data.answer || "N/A")}</div>
             </div>
@@ -285,7 +285,7 @@ function renderCSAOResults(data, container) {
 
     let html = `
         <div class="csao-summary-card ${data.pivot_localized ? 'pivot-found' : 'all-sound'}">
-            <div class="summary-icon">${data.pivot_localized ? '🎯' : '✓'}</div>
+            <div class="summary-icon">${data.pivot_localized ? '[PIVOT]' : '[VALID]'}</div>
             <div class="summary-text">${data.summary}</div>
         </div>
     `;
@@ -337,7 +337,7 @@ function initDuelArena() {
     if (btnDuel) {
         btnDuel.addEventListener("click", async () => {
             btnDuel.disabled = true;
-            btnDuel.textContent = "⚔️ Duel in Progress...";
+            btnDuel.textContent = "Duel in Progress...";
             if (outcomeTag) outcomeTag.textContent = "Prover formulating proof...";
 
             try {
@@ -374,13 +374,13 @@ function initDuelArena() {
                     }
 
                     btnDuel.disabled = false;
-                    btnDuel.textContent = "⚔️ Start Next Round";
+                    btnDuel.textContent = "Start Next Round";
                 }, 600);
 
             } catch (err) {
                 if (outcomeTag) outcomeTag.textContent = "Duel Error";
                 btnDuel.disabled = false;
-                btnDuel.textContent = "⚔️ Retry Duel";
+                btnDuel.textContent = "Retry Duel";
             }
         });
     }
@@ -435,7 +435,7 @@ async function runTierChallenge(tierNum) {
         const statusPill = activeTier.querySelector(".tier-status");
         if (data.is_correct) {
             statusPill.className = "tier-status mastered";
-            statusPill.textContent = "Verified ✓";
+            statusPill.textContent = "Verified";
         } else {
             statusPill.className = "tier-status in-progress";
             statusPill.textContent = "Target Slip";

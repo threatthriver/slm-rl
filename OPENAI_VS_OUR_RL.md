@@ -4,7 +4,7 @@ A rigorous technical analysis comparing **OpenAI's Reinforcement Learning paradi
 
 ---
 
-## 🏛️ Executive Summary
+## Executive Summary
 
 | Dimension | OpenAI RL Paradigm (InstructGPT / o1 / o3) | Our Frontier SLM-RL System |
 | :--- | :--- | :--- |
@@ -19,7 +19,7 @@ A rigorous technical analysis comparing **OpenAI's Reinforcement Learning paradi
 
 ---
 
-## 🔬 In-Depth Comparative Analysis: 8 Architectural Pillars
+## In-Depth Comparative Analysis: 8 Architectural Pillars
 
 ### 1. Optimization Algorithm & Critic Elimination
 - **OpenAI (PPO Actor-Critic)**:
@@ -127,17 +127,17 @@ A rigorous technical analysis comparing **OpenAI's Reinforcement Learning paradi
 
 ---
 
-## 📊 Summary Feature Matrix
+## Summary Feature Matrix
 
 | Feature | OpenAI PPO / RLHF | OpenAI o1/o3 (Inferred) | Our Frontier SLM-RL |
 | :--- | :---: | :---: | :---: |
-| **Critic-Free Architecture** | ❌ No | ❓ Unknown | ✅ Yes (GRPO) |
-| **Counterfactual Pivot Credit** | ❌ No | ❓ Unknown | ✅ Yes (CSAO) |
-| **LoRA Zero-Memory Reference** | ❌ No | ❌ No | ✅ Yes |
-| **Online DPO from Rollouts** | ❌ No | ❌ No | ✅ Yes |
-| **Prover-Skeptic Self-Play** | ❌ No | ❓ Unknown | ✅ Yes |
-| **Phase-Gated Entropy** | ❌ No | ❌ No | ✅ Yes |
-| **Complexity-Calibrated Compute** | ❌ No | ❓ Unknown | ✅ Yes |
-| **Runs on Apple Silicon (8GB RAM)**| ❌ No | ❌ No | ✅ Yes |
-| **Verifiable Math/Format Rules** | ❌ No | ✅ Yes | ✅ Yes |
-| **Dynamic Multi-Tier Curriculum** | ❌ No | ❓ Unknown | ✅ Yes |
+| **Critic-Free Architecture** | [No] | [Unknown] | [Yes] (GRPO) |
+| **Counterfactual Pivot Credit** | [No] | [Unknown] | [Yes] (CSAO) |
+| **LoRA Zero-Memory Reference** | [No] | [No] | [Yes] |
+| **Online DPO from Rollouts** | [No] | [No] | [Yes] |
+| **Prover-Skeptic Self-Play** | [No] | [Unknown] | [Yes] |
+| **Phase-Gated Entropy** | [No] | [No] | [Yes] |
+| **Complexity-Calibrated Compute** | [No] | [Unknown] | [Yes] |
+| **Runs on Apple Silicon (8GB RAM)**| [No] | [No] | [Yes] |
+| **Verifiable Math/Format Rules** | [No] | [Yes] | [Yes] |
+| **Dynamic Multi-Tier Curriculum** | [No] | [Unknown] | [Yes] |
