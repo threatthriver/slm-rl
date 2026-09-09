@@ -1,0 +1,29 @@
+[project]
+name = "slm-rl"
+version = "0.1.0"
+description = "Reinforcement Learning system tailored for Small Language Models (SLMs) featuring GRPO and PPO"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.2.0",
+    "transformers>=4.40.0",
+    "accelerate>=0.28.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "pytest>=8.0.0",
+    "tqdm>=4.66.0",
+    "fastapi>=0.141.1",
+    "uvicorn>=0.52.4",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["slm_rl*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+

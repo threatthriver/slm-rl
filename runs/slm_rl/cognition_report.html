@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLM-RL: Cognition & Reasoning Telemetry</title>
+    <style>
+        :root {
+            --bg: #090d16;
+            --card-bg: #111827;
+            --border: #1f2937;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.3);
+            --green: #10b981;
+            --gold: #f59e0b;
+            --purple: #8b5cf6;
+            --red: #ef4444;
+            --text: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 32px 24px; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .title-group h1 { font-size: 26px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 10px; }
+        .badge { background: var(--accent-glow); color: #60a5fa; border: 1px solid #3b82f6; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; }
+        .subtitle { color: var(--text-muted); font-size: 14px; margin-top: 6px; }
+        
+        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+        .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px; position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }
+        .stat-card.green::before { background: var(--green); }
+        .stat-card.gold::before { background: var(--gold); }
+        .stat-card.purple::before { background: var(--purple); }
+        .stat-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+        .stat-value { font-size: 28px; font-weight: 700; margin-top: 8px; color: #fff; }
+
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .chart-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 32px; }
+
+        .timeline-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .timeline-table th { background: #1a2234; padding: 12px 16px; text-align: left; font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+        .timeline-table td { padding: 14px 16px; border-top: 1px solid var(--border); font-size: 13px; }
+        .timeline-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+        .think-box { background: #0b1120; border-left: 3px solid var(--purple); padding: 12px 14px; border-radius: 6px; font-family: ui-monospace, SFMono-Regular, monospace; font-size: 12px; line-height: 1.5; color: #cbd5e1; margin-top: 6px; }
+        .highlight-aha { background: rgba(245, 158, 11, 0.2); color: #fbbf24; padding: 2px 6px; border-radius: 4px; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .answer-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; }
+        .answer-badge.correct { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #10b981; }
+        .answer-badge.wrong { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title-group">
+                <h1>🧠 SLM-RL Cognition & Reasoning Inspector <span class="badge">Live Telemetry</span></h1>
+                <p class="subtitle">Real-time verification metrics, test-time compute, and thinking diagnostics for Small Language Models</p>
+            </div>
+        </div>
+
+        <div class="grid-stats">
+            <div class="stat-card green">
+                <div class="stat-label">Final Mean Reward</div>
+                <div class="stat-value">{final_reward:.3f}</div>
+            </div>
+            <div class="stat-card gold">
+                <div class="stat-label">Test-Time Compute (Words)</div>
+                <div class="stat-value">{avg_think_words:.1f}</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="stat-label">Policy Entropy</div>
+                <div class="stat-value">{policy_entropy:.2f}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">KL Drift vs Ref</div>
+                <div class="stat-value">{kl_div:.4f}</div>
+            </div>
+        </div>
+
+        <div class="section-title">📊 Step-by-Step Training Telemetry</div>
+        <div class="chart-container">
+            <table class="timeline-table">
+                <thead>
+                    <tr>
+                        <th>Step</th>
+                        <th>Reward</th>
+                        <th>Policy Loss</th>
+                        <th>KL Divergence</th>
+                        <th>Entropy</th>
+                        <th>Think Words</th>
+                        <th>Active Gradient %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><b>#4</b></td><td style='color:#10b981; font-weight:600;'>0.268</td><td>-0.000</td><td style='color:#8b5cf6;'>0.0038</td><td>0.34</td><td style='color:#06b6d4;'>16.2</td><td>100%</td></tr>
+<tr><td><b>#3</b></td><td style='color:#10b981; font-weight:600;'>0.137</td><td>0.019</td><td style='color:#8b5cf6;'>0.0041</td><td>0.49</td><td style='color:#06b6d4;'>9.1</td><td>100%</td></tr>
+<tr><td><b>#2</b></td><td style='color:#10b981; font-weight:600;'>0.218</td><td>-0.004</td><td style='color:#8b5cf6;'>0.0019</td><td>0.32</td><td style='color:#06b6d4;'>9.6</td><td>88%</td></tr>
+<tr><td><b>#1</b></td><td style='color:#10b981; font-weight:600;'>0.112</td><td>-0.001</td><td style='color:#8b5cf6;'>0.0002</td><td>0.47</td><td style='color:#06b6d4;'>6.4</td><td>100%</td></tr>
+<tr><td><b>#4</b></td><td style='color:#10b981; font-weight:600;'>0.266</td><td>-0.001</td><td style='color:#8b5cf6;'>0.0007</td><td>0.32</td><td style='color:#06b6d4;'>13.5</td><td>100%</td></tr>
+<tr><td><b>#3</b></td><td style='color:#10b981; font-weight:600;'>0.130</td><td>-0.001</td><td style='color:#8b5cf6;'>0.0018</td><td>0.60</td><td style='color:#06b6d4;'>7.9</td><td>100%</td></tr>
+<tr><td><b>#2</b></td><td style='color:#10b981; font-weight:600;'>0.223</td><td>-0.007</td><td style='color:#8b5cf6;'>0.0004</td><td>0.38</td><td style='color:#06b6d4;'>10.1</td><td>100%</td></tr>
+<tr><td><b>#1</b></td><td style='color:#10b981; font-weight:600;'>0.297</td><td>0.001</td><td style='color:#8b5cf6;'>0.0001</td><td>0.30</td><td style='color:#06b6d4;'>12.5</td><td>100%</td></tr>
+<tr><td><b>#3</b></td><td style='color:#10b981; font-weight:600;'>0.000</td><td>0.000</td><td style='color:#8b5cf6;'>0.0000</td><td>6.58</td><td style='color:#06b6d4;'>0.0</td><td>0%</td></tr>
+<tr><td><b>#2</b></td><td style='color:#10b981; font-weight:600;'>0.000</td><td>0.000</td><td style='color:#8b5cf6;'>0.0000</td><td>6.55</td><td style='color:#06b6d4;'>0.0</td><td>0%</td></tr>
+<tr><td><b>#1</b></td><td style='color:#10b981; font-weight:600;'>0.000</td><td>0.000</td><td style='color:#8b5cf6;'>0.0000</td><td>6.55</td><td style='color:#06b6d4;'>0.0</td><td>0%</td></tr>
+<tr><td><b>#1</b></td><td style='color:#10b981; font-weight:600;'>0.000</td><td>-0.000</td><td style='color:#8b5cf6;'>0.0000</td><td>0.00</td><td style='color:#06b6d4;'>0.0</td><td>100%</td></tr>
+<tr><td><b>#1</b></td><td style='color:#10b981; font-weight:600;'>0.000</td><td>0.000</td><td style='color:#8b5cf6;'>0.0000</td><td>6.54</td><td style='color:#06b6d4;'>0.0</td><td>0%</td></tr>
+<tr><td><b>#15</b></td><td style='color:#10b981; font-weight:600;'>0.000</td><td>0.001</td><td style='color:#8b5cf6;'>0.0294</td><td>6.53</td><td style='color:#06b6d4;'>0.0</td><td>0%</td></tr>
+<tr><td><b>#14</b></td><td style='color:#10b981; font-weight:600;'>0.000</td><td>0.001</td><td style='color:#8b5cf6;'>0.0204</td><td>6.55</td><td style='color:#06b6d4;'>0.0</td><td>0%</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

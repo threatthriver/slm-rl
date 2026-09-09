@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLM-RL: Cognition Studio & Reasoning Control Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-orb">
+                    <span class="pulse-dot"></span>
+                </div>
+                <div class="brand-text">
+                    <h2>SLM-RL</h2>
+                    <span class="subtext">Cognition Studio v2.0</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-item active" data-tab="playground">
+                    <span class="icon">🧠</span>
+                    <span>Reasoning Studio</span>
+                </button>
+                <button class="nav-item" data-tab="csao">
+                    <span class="icon">🎯</span>
+                    <span>CSAO Pivot Inspector</span>
+                </button>
+                <button class="nav-item" data-tab="duel">
+                    <span class="icon">⚔️</span>
+                    <span>Prover-Skeptic Duel</span>
+                </button>
+                <button class="nav-item" data-tab="curriculum">
+                    <span class="icon">🏔️</span>
+                    <span>Curriculum Pyramid</span>
+                </button>
+                <button class="nav-item" data-tab="telemetry">
+                    <span class="icon">📊</span>
+                    <span>Telemetry & Rewards</span>
+                </button>
+                <button class="nav-item" data-tab="compare">
+                    <span class="icon">⚖️</span>
+                    <span>OpenAI vs SLM-RL</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="device-pill">
+                    <span class="status-indicator online"></span>
+                    <span id="backend-status">Apple MPS Engine Active</span>
+                </div>
+                <div class="version-tag">SmolLM2-135M • LoRA Checkpoint #4</div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-container">
+            <!-- Top Header Bar -->
+            <header class="top-bar">
+                <div class="bar-title">
+                    <h1 id="page-title">Deliberative Reasoning Studio</h1>
+                    <p id="page-subtitle">Test-time reasoning inspection, step attribution, and self-correction verification</p>
+                </div>
+                <div class="bar-actions">
+                    <div class="quick-stat">
+                        <span class="stat-name">Format Rate</span>
+                        <span class="stat-val emerald" id="header-format">100.0%</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="stat-name">GSM8K Pass@1</span>
+                        <span class="stat-val amber" id="header-acc">50.0%</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="stat-name">Memory Footprint</span>
+                        <span class="stat-val cyan" id="header-mem">229k LoRA</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- TAB 1: REASONING PLAYGROUND -->
+            <section class="tab-content active" id="tab-playground">
+                <div class="grid-playground">
+                    <!-- Left: Control & Prompt Input -->
+                    <div class="panel glass-card prompt-panel">
+                        <div class="panel-header">
+                            <h3>Problem Input</h3>
+                            <div class="model-badge">LoRA Fine-Tuned (Post-RL)</div>
+                        </div>
+
+                        <!-- Preset Buttons -->
+                        <div class="preset-pills">
+                            <span class="preset-label">Benchmarks:</span>
+                            <button class="pill" data-problem="Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?">Babysitting (GSM8K)</button>
+                            <button class="pill" data-problem="Betty is saving money for a new wallet which costs $100. Betty has only half of the money she needs. Her parents gave her $15 and grandparents gave twice as much as parents. How much more money does Betty need?">Betty's Wallet</button>
+                            <button class="pill" data-problem="A baker made 40 chocolate cookies and 60 vanilla cookies. He sold 30 cookies in the morning and 25 in the afternoon. How many cookies are left?">Bakery Cookies</button>
+                            <button class="pill" data-problem="Calculate (18 * 4) - (35 / 5) + 12.">Multi-Op Arithmetic</button>
+                        </div>
+
+                        <textarea id="prompt-input" rows="4" placeholder="Enter mathematical or reasoning question here..."></textarea>
+
+                        <div class="controls-row">
+                            <div class="control-group">
+                                <label for="temp-slider">Temperature: <span id="temp-val">0.2</span></label>
+                                <input type="range" id="temp-slider" min="0" max="1" step="0.05" value="0.2">
+                            </div>
+                            <div class="control-group">
+                                <label for="tokens-slider">Max Tokens: <span id="tokens-val">128</span></label>
+                                <input type="range" id="tokens-slider" min="32" max="256" step="16" value="128">
+                            </div>
+                            <button class="btn primary-btn" id="btn-generate">
+                                <span class="btn-icon">⚡</span> Run Deliberation
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Real-Time Deliberation Output -->
+                    <div class="panel glass-card result-panel">
+                        <div class="panel-header">
+                            <h3>SLM Deliberative Trace</h3>
+                            <div id="latency-tag" class="latency-badge">Ready</div>
+                        </div>
+
+                        <div class="reasoning-viewer" id="reasoning-viewer">
+                            <div class="empty-state">
+                                <div class="empty-icon">💭</div>
+                                <p>Select a benchmark question above or type your own problem, then click <b>Run Deliberation</b>.</p>
+                                <span class="empty-hint">The model will think step-by-step inside <code>&lt;think&gt;</code> before outputting the verified answer in <code>&lt;answer&gt;</code>.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: CSAO STEP CREDIT INSPECTOR -->
+            <section class="tab-content" id="tab-csao">
+                <div class="csao-container">
+                    <div class="panel glass-card">
+                        <div class="panel-header">
+                            <h3>Counterfactual Step-Level Credit Assignment (CSAO)</h3>
+                            <span class="badge purple">Surgical Pivot-Error Credit</span>
+                        </div>
+                        <p class="section-desc">
+                            In multi-step reasoning, Small Language Models frequently generate 2 or 3 correct deduction steps before committing a calculation slip. 
+                            Instead of penalizing the entire trajectory, CSAO locates the exact <b>pivot step</b> where deduction broke, rewarding preceding valid steps and penalizing only the point of failure.
+                        </p>
+
+                        <div class="csao-workbench">
+                            <div class="csao-input-col">
+                                <label>Reasoning Chain to Analyze:</label>
+                                <textarea id="csao-input-text" rows="6"><think>
+Step 1: Natalia sold 48 clips in April.
+Step 2: In May, she sold half as many clips: 48 / 2 = 24.
+Step 3: Altogether she sold 48 + 24 = 82 clips.
+Step 4: Therefore Natalia has 82 clips.
+</think>
+<answer>82</answer></textarea>
+                                <div class="csao-controls">
+                                    <label>Gamma Discount: <span id="csao-gamma-val">0.9</span></label>
+                                    <input type="range" id="csao-gamma" min="0.5" max="0.99" step="0.05" value="0.9">
+                                    <button class="btn secondary-btn" id="btn-analyze-csao">Analyze Step Credit</button>
+                                </div>
+                            </div>
+
+                            <div class="csao-output-col">
+                                <label>Step-by-Step Advantage Allocation:</label>
+                                <div id="csao-step-results" class="step-card-list">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: PROVER-SKEPTIC DUEL ARENA -->
+            <section class="tab-content" id="tab-duel">
+                <div class="duel-container">
+                    <div class="panel glass-card">
+                        <div class="panel-header">
+                            <h3>Prover-Skeptic Autonomous Self-Play Arena</h3>
+                            <span class="badge gold">Zero-Teacher Game Matrix</span>
+                        </div>
+                        <p class="section-desc">
+                            Two roles extracted from the same base SLM engage in an adversarial verification duel: 
+                            the <b>Prover</b> constructs a step-by-step mathematical proof, while the <b>Skeptic</b> rigorously checks for calculation errors or logical fallacies.
+                        </p>
+
+                        <div class="duel-arena-layout">
+                            <div class="agent-card prover-card">
+                                <div class="agent-header">
+                                    <span class="agent-avatar">🛡️</span>
+                                    <div>
+                                        <h4>Prover SLM</h4>
+                                        <span class="agent-role">Proof Constructor</span>
+                                    </div>
+                                    <span class="payoff-badge" id="prover-payoff">+0.0</span>
+                                </div>
+                                <div class="agent-bubble" id="prover-bubble">
+                                    Awaiting problem submission...
+                                </div>
+                            </div>
+
+                            <div class="duel-vs-divider">
+                                <div class="vs-circle">VS</div>
+                                <button class="btn accent-btn" id="btn-trigger-duel">⚔️ Start Duel Round</button>
+                                <div class="outcome-tag" id="duel-outcome-tag">Status: Idle</div>
+                            </div>
+
+                            <div class="agent-card skeptic-card">
+                                <div class="agent-header">
+                                    <span class="agent-avatar">🔍</span>
+                                    <div>
+                                        <h4>Skeptic SLM</h4>
+                                        <span class="agent-role">Adversarial Verifier</span>
+                                    </div>
+                                    <span class="payoff-badge" id="skeptic-payoff">+0.0</span>
+                                </div>
+                                <div class="agent-bubble" id="skeptic-bubble">
+                                    Awaiting Prover solution to critique...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: CURRICULUM MASTERY PYRAMID -->
+            <section class="tab-content" id="tab-curriculum">
+                <div class="curriculum-container">
+                    <div class="panel glass-card">
+                        <div class="panel-header">
+                            <h3>Dynamic 5-Tier Reasoning Curriculum</h3>
+                            <span class="badge cyan">Auto-Adapting Difficulty</span>
+                        </div>
+                        <p class="section-desc">
+                            The environment continuously tracks the agent's rolling pass rate. When accuracy crosses 75%, it promotes the agent to higher cognitive tiers, preventing exploration collapse.
+                        </p>
+
+                        <div class="pyramid-view">
+                            <div class="tier-level tier-5" data-tier="5">
+                                <div class="tier-number">Tier 5</div>
+                                <div class="tier-info">
+                                    <h4>Full GSM8K Multi-Step Word Problems</h4>
+                                    <span>Rate: 50.0% • Threshold: 75%</span>
+                                </div>
+                                <span class="tier-status in-progress">In Training</span>
+                            </div>
+                            <div class="tier-level tier-4 active-tier" data-tier="4">
+                                <div class="tier-number">Tier 4</div>
+                                <div class="tier-info">
+                                    <h4>Mixed Operations & Division Reasoning</h4>
+                                    <span>Rate: 85.0% • Promoted!</span>
+                                </div>
+                                <span class="tier-status mastered">Mastered ✓</span>
+                            </div>
+                            <div class="tier-level tier-3" data-tier="3">
+                                <div class="tier-number">Tier 3</div>
+                                <div class="tier-info">
+                                    <h4>Multiplicative Chains with Parentheses</h4>
+                                    <span>Rate: 92.0% • Promoted!</span>
+                                </div>
+                                <span class="tier-status mastered">Mastered ✓</span>
+                            </div>
+                            <div class="tier-level tier-2" data-tier="2">
+                                <div class="tier-number">Tier 2</div>
+                                <div class="tier-info">
+                                    <h4>Two-Step Sequential Arithmetic</h4>
+                                    <span>Rate: 98.0% • Promoted!</span>
+                                </div>
+                                <span class="tier-status mastered">Mastered ✓</span>
+                            </div>
+                            <div class="tier-level tier-1" data-tier="1">
+                                <div class="tier-number">Tier 1</div>
+                                <div class="tier-info">
+                                    <h4>Single-Step Addition & Subtraction</h4>
+                                    <span>Rate: 100.0% • Baseline</span>
+                                </div>
+                                <span class="tier-status mastered">Mastered ✓</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: TELEMETRY & REWARD SIMULATOR -->
+            <section class="tab-content" id="tab-telemetry">
+                <div class="telemetry-grid">
+                    <div class="panel glass-card stat-chart-card">
+                        <div class="panel-header">
+                            <h3>Live Training Curves</h3>
+                            <span class="badge emerald">Apple MPS Metal Telemetry</span>
+                        </div>
+                        <div class="svg-chart-container" id="svg-chart-box">
+                            <!-- Rendered dynamic SVG -->
+                        </div>
+                    </div>
+
+                    <div class="panel glass-card reward-sim-card">
+                        <div class="panel-header">
+                            <h3>Composite Verifiable Reward Simulator</h3>
+                        </div>
+                        <div class="reward-sliders">
+                            <div class="slider-row">
+                                <label>Mathematical Correctness: <span id="r-math-w">0.40</span></label>
+                                <input type="range" class="r-slider" id="sl-math" min="0" max="1" step="0.05" value="0.4">
+                            </div>
+                            <div class="slider-row">
+                                <label>Reasoning Format Compliance: <span id="r-fmt-w">0.30</span></label>
+                                <input type="range" class="r-slider" id="sl-fmt" min="0" max="1" step="0.05" value="0.3">
+                            </div>
+                            <div class="slider-row">
+                                <label>'Aha!' Self-Correction Bonus: <span id="r-aha-w">0.15</span></label>
+                                <input type="range" class="r-slider" id="sl-aha" min="0" max="0.5" step="0.05" value="0.15">
+                            </div>
+                            <div class="slider-row">
+                                <label>Complexity-Calibrated Compute: <span id="r-comp-w">0.15</span></label>
+                                <input type="range" class="r-slider" id="sl-comp" min="0" max="0.5" step="0.05" value="0.15">
+                            </div>
+                        </div>
+                        <div class="sim-output-box">
+                            <div class="sim-score-label">Simulated Verification Score:</div>
+                            <div class="sim-score-value" id="sim-score-display">+0.850</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 6: OPENAI VS OUR SLM-RL -->
+            <section class="tab-content" id="tab-compare">
+                <div class="compare-container">
+                    <div class="panel glass-card">
+                        <div class="panel-header">
+                            <h3>Architectural Comparator: OpenAI RL vs. Our Frontier SLM-RL</h3>
+                            <span class="badge blue">Hardware & Algorithm Benchmark</span>
+                        </div>
+
+                        <div class="comparison-table-wrapper">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Key Pillar</th>
+                                        <th>OpenAI RLHF / PPO Baseline</th>
+                                        <th>Our Frontier SLM-RL System</th>
+                                        <th>Architectural Advantage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><b>Optimization Algorithm</b></td>
+                                        <td>PPO (Actor-Critic dual networks)</td>
+                                        <td>Critic-Free GRPO / Online DPO</td>
+                                        <td><span class="pill-win">Eliminates 2nd Network</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Reference Model Memory</b></td>
+                                        <td>100% parameter memory overhead (full copy)</td>
+                                        <td>0% parameter memory overhead (LoRA adapter toggle)</td>
+                                        <td><span class="pill-win">0 extra parameter RAM</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Credit Assignment</b></td>
+                                        <td>Scalar Trajectory GAE</td>
+                                        <td>Counterfactual Pivot-Step (CSAO)</td>
+                                        <td><span class="pill-win">Protects Valid Reasoning</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Test-Time Deliberation</b></td>
+                                        <td>Unconstrained Token Loop</td>
+                                        <td>Phase-Gated Entropy & Calibrated Compute</td>
+                                        <td><span class="pill-win">Zero Over/Underthinking</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Supervision Strategy</b></td>
+                                        <td>Learned Neural Reward Model</td>
+                                        <td>Verifiable Symbolic & Math Rules</td>
+                                        <td><span class="pill-win">Immune to Reward Hacking</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Hardware Target</b></td>
+                                        <td>Clusters of 80GB H100s</td>
+                                        <td>8GB Apple Silicon Unified Memory (MPS)</td>
+                                        <td><span class="pill-win">Runs Directly on Laptop</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
